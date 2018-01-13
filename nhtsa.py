@@ -1,25 +1,65 @@
-from urllib2 import urlopen
+from urllib.request import urlopen
 from json import load
+from tkinter import *
 
-#Declare and assign value for apiUrl variable here
-apiUrl = "http://www.nhtsa.gov/webapi/api/SafetyRatings"
-#Declare and assign value for apiParam variable here
-apiParam = "/VehicleId/7045"
-#Declare and assign value for outputFormat variable for response format in querystring
-outputFormat = "?format=json"
 
-#Combine all three variables to make up the complete request URL
-response = urlopen(apiUrl + apiParam + outputFormat)
 
-#code below is only to handle JSON response object/format
-#use equivalent sets of commands to handle xml response object/format
-json_obj = load(response)
+modelyear = ""
+make = ""
+model = ""
 
-#Load the Result (vehicle collection) from the JSON response
-print '------------------------------'
-print '           Result			 '
-print '------------------------------'
-for objectCollection in json_obj['Results']:
-	# Loop each vehicle in the vehicles collection
-    for safetyRatingAttribute, safetyRatingValue in objectCollection.iteritems():
-        print safetyRatingAttribute, ": ", safetyRatingValue
+root = Tk()
+
+canvas = Canvas(root, width=1000, height=700)
+
+def mubmit():
+
+	apiUrl = "http://www.nhtsa.gov/webapi/api/SafetyRatings"
+
+	apiParam = "/modelyear/2013/make/Acura/model/rdx"
+
+	outputFormat = "?format=json"
+
+	response = urlopen(apiUrl + apiParam + outputFormat)
+
+
+
+
+	#################################################################
+	json_obj = load(response)
+
+	#Load the Result (vehicle collection) from the JSON response
+	print('------------------------------')
+	print('           Result			 ')
+	print('------------------------------')
+	for objectCollection in json_obj['Results']:
+		# Loop each vehicle in the vehicles collection
+	    for variable, value in objectCollection.items():
+	        print(variable, ": ", value)
+	    print("\n")
+
+
+
+
+blanklabel1 = Label(root, text= ' ').pack()
+modelyearlabel = Label(root, text= 'Enter the model year of your car').pack()
+modelyearbox = Entry(root, textvariable=modelyear).pack()
+
+blanklabel2 = Label(root, text= ' ').pack()
+makeboxlabel = Label(root, text= 'Enter the manufacturer of your car').pack()
+makebox = Entry(root, textvariable=make).pack()
+
+blanklabel3 = Label(root, text= ' ').pack()
+modellabel = Label(root, text= 'Enter the model of your car').pack()
+modelbox = Entry(root, textvariable=model).pack()
+
+blanklabel4 = Label(root, text= ' ').pack()
+button = Button(root, text = 'Submit', command = mubmit,fg = 'black', bg='white').pack()
+
+canvas.pack()
+root.mainloop()
+
+
+
+
+
